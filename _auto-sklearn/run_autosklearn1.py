@@ -120,6 +120,9 @@ def main():
     print("Saved stats")
     print("===================================================================== \n\n\n")
 
+    with open(pjoin(RUN_DIR, "done.txt"), "w+") as done:
+        done.write("done")
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run Auto-Sklearn1')
     parser.add_argument("--automl_params_path", type=str, default="auto-sklearn1_params.json")
