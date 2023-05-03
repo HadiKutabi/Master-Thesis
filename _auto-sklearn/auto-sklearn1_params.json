@@ -1,0 +1,13 @@
+{
+    "time_left_for_this_task": 800,
+    "per_run_time_limit": 120,
+    "ensemble_kwargs": {
+        "ensemble_size": 50
+    },
+    "ensemble_nbest": 50,
+    "max_models_on_disc": null,
+    "memory_limit": 3072,
+    "resampling_strategy": "holdout",
+    "delete_tmp_folder_after_terminate": false,
+    "n_jobs": 2
+}
