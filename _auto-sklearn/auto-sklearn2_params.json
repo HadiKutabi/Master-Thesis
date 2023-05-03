@@ -7,7 +7,6 @@
     "ensemble_nbest": 50,
     "max_models_on_disc": null,
     "memory_limit": 3072,
-    "resampling_strategy": "holdout",
     "delete_tmp_folder_after_terminate": false,
     "n_jobs": 1
 }

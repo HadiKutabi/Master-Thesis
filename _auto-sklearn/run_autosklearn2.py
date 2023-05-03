@@ -5,7 +5,7 @@ sys.path.append("/../..")
 
 
 from time import time
-import autosklearn.classification
+from autosklearn.experimental.askl2 import AutoSklearn2Classifier
 import pandas as pd
 from sklearn.metrics import accuracy_score
 
@@ -88,7 +88,7 @@ def main():
     DS = pjoin(P_ROOT, pjoin("datasets", args.dataset))
     CWD = getcwd()
     SEED = get_saved_or_newly_generated_seed()
-    RUN_DIR = pjoin(CWD, f"autosklearn1-ds_{args.dataset}-seed_{SEED}")
+    RUN_DIR = pjoin(CWD, f"autosklearn2-ds_{args.dataset}-seed_{SEED}")
 
     X_train, X_test, y_train, y_test = fetch_and_split_data_set(DS)
 
@@ -99,7 +99,7 @@ def main():
 
     print("Starting AutoML procedure")
 
-    automl = autosklearn.classification.AutoSklearnClassifier(**automl_params)
+    automl = AutoSklearn2Classifier(**automl_params)
 
     tick = time()
     automl.fit(X_train, y_train)
@@ -118,12 +118,10 @@ def main():
     print("Saved stats")
     print("===================================================================== \n\n\n")
 
-    with open(pjoin(RUN_DIR, "done.txt"), "w+") as done:
-        done.write("done")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Run Auto-Sklearn1')
-    parser.add_argument("--automl_params_path", type=str, default="dswizard_params.json")
+    parser = argparse.ArgumentParser(description='Run Auto-Sklearn2')
+    parser.add_argument("--automl_params_path", type=str, default="auto-sklearn2_params.json")
     parser.add_argument("--dataset", type=str)
     args = parser.parse_args()
 
