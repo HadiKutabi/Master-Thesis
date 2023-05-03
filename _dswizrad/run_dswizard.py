@@ -147,7 +147,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     for d in [
-        "kc1"]:  # , "Amazon_employee_access", "higgs", "KDDCup09-Appetency", "APSFailure", "volkert", "covertype"]:
+        "kc1", "Amazon_employee_access", "higgs", "KDDCup09-Appetency", "APSFailure", "volkert", "covertype"]:
         args.dataset = d
         print(args.dataset)
         main()
