@@ -99,6 +99,11 @@ def main():
     automl_params["tmp_folder"] = RUN_DIR
     automl_params["logging_config"] = logging_config
 
+    if args.dataset == "volkert":
+        automl_params["time_left_for_this_task"] = 25 * 60
+        automl_params["per_run_time_limit"] = 60 * 3
+
+
     print("Starting AutoML procedure")
 
     automl = autosklearn.classification.AutoSklearnClassifier(**automl_params)
@@ -129,7 +134,7 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", type=str)
     args = parser.parse_args()
 
-    for d in ["Amazon_employee_access", "kc1", "higgs", "KDDCup09-Appetency", "APSFailure", "volkert", "covertype"]:
+    for d in ["kc1", "Amazon_employee_access", "higgs", "KDDCup09-Appetency", "APSFailure", "volkert", "covertype"]:
         args.dataset = d
         print(args.dataset)
         try:
