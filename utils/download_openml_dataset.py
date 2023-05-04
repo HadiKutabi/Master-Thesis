@@ -22,11 +22,12 @@ DATASETS_DIR = pjoin(ROOT_DIR, "datasets")
 
 datasets_ids = [
     # binary classification
-    1067,  # kc1
+    #1067,  # kc1
     4532,  # higgs
     4135,  # amazon_employee_access
-    # 42757,  # KDDCup09-Appetency
+    42757,  # KDDCup09-Appetency
     41138,  # APSFailure
+
     # multi class
     41166,  # volkert
     1596  # covertype
