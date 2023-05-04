@@ -4,6 +4,8 @@ import sys
 
 import numpy as np
 
+from utils.write_done import write_done_txt
+
 sys.path.append("../")
 sys.path.append("/../..")
 
@@ -35,29 +37,6 @@ def fetch_and_get_dataset_ready(ds):
 
     return train_ds, test_ds
 
-
-# def get_and_save_stats_csv(aml, total_time, accuracy, save_to_dir):
-#     _, stats = aml.sprint_statistics()
-#     stats = pd.DataFrame(stats)
-#     stats["total_time"] = total_time
-#     stats["test_score"] = accuracy
-#     stats["n_pipelines_in_ensemble"] = len(aml.show_models())
-#     stats.to_csv(pjoin(save_to_dir, "run_stats.csv"), index=False)
-
-
-# def predict_and_save(aml, x_test, save_to_dir):
-#     pred = aml.predict(x_test)
-#     pred_proba = aml.predict_proba(x_test)
-#
-#     pred_df = pd.DataFrame()
-#
-#     pred_df["pred"] = pred
-#     pred_df["pred_proba_0"] = pred_proba[:, 0]
-#     pred_df["pred_proba_1"] = pred_proba[:, 1]
-#
-#     pred_df.to_csv(pjoin(save_to_dir, "prediction.csv"), index=False)
-#
-#     return pred, pred_proba
 
 
 def make_predictions(pipeline, ensemble, test_ds, save_to_dir):
@@ -132,22 +111,35 @@ def main():
 
     _, incumbent = run_history.get_incumbent()
     dump_pickle(pipeline, pjoin(RUN_DIR, "pipeline.pkl"))
+    print("Pipeline saved")
     dump_pickle(ensemble, pjoin(RUN_DIR, "ensemble.pkl"))
+    print("ensemble saved")
     dump_pickle(run_history, pjoin(RUN_DIR, "my_run_history.pkl"))
+    print("Run history saved")
     dump_pickle(incumbent, pjoin(RUN_DIR, "incumbent.pkl"))
+    print("Incumbent saved")
 
     pred_df = make_predictions(pipeline, ensemble, test_ds, RUN_DIR)
     compute_and_save_score(pred_df, test_ds, -incumbent.get_incumbent().loss, RUN_DIR)
+    print("Scored and saved predictions")
+    write_done_txt(RUN_DIR)
+    print("DONE")
+    print("===================================================================== \n\n\n")
 
 
 if __name__ == "__main__":
+
+    P_ROOT = get_project_root()
     parser = argparse.ArgumentParser(description='Run Auto-Sklearn1')
-    parser.add_argument("--automl_params_path", type=str, default="dswizard_params.json")
+    parser.add_argument("--automl_params_path", type=str, default= pjoin(P_ROOT, "config/dswizard_params.json"))
     parser.add_argument("--dataset", type=str)
     args = parser.parse_args()
 
-    for d in [
-        "kc1", "Amazon_employee_access", "higgs", "KDDCup09-Appetency", "APSFailure", "volkert", "covertype"]:
+    for d in ["Amazon_employee_access", "higgs", "KDDCup09-Appetency", "APSFailure", "volkert", "covertype"]:
         args.dataset = d
         print(args.dataset)
-        main()
+
+        try:
+            main()
+        except:
+            print(f"Error {args.dataset}")

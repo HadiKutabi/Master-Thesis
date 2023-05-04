@@ -1,5 +1,7 @@
 import sys
 
+from utils.write_done import write_done_txt
+
 sys.path.append("../")
 sys.path.append("/../..")
 
@@ -72,8 +74,8 @@ def predict_and_save(aml, x_test, save_to_dir):
     pred_df = pd.DataFrame()
 
     pred_df["pred"] = pred
-    pred_df["pred_proba_0"] = pred_proba[:, 0]
-    pred_df["pred_proba_1"] = pred_proba[:, 1]
+    for i in range(0, pred_proba.shape[1]):
+        pred_df[f"pred_proba_{i}"] = pred_proba[:, i]
 
     pred_df.to_csv(pjoin(save_to_dir, "prediction.csv"), index=False)
 
@@ -116,21 +118,24 @@ def main():
 
     get_and_save_stats_csv(automl, total_time, acc, RUN_DIR)
     print("Saved stats")
+
+    write_done_txt(RUN_DIR)
+    print("DONE")
     print("===================================================================== \n\n\n")
 
-    with open(pjoin(RUN_DIR, "done.txt"), "w+") as done:
-        done.write("done")
-
 if __name__ == "__main__":
+    P_ROOT = get_project_root()
+
     parser = argparse.ArgumentParser(description='Run Auto-Sklearn1')
-    parser.add_argument("--automl_params_path", type=str, default="dswizard_params.json")
+    parser.add_argument("--automl_params_path", type=str, default=pjoin(P_ROOT, "config/auto-sklearn1_params.json"))
     parser.add_argument("--dataset", type=str)
     args = parser.parse_args()
 
-    for d in ["kc1"]:#, "Amazon_employee_access", "higgs", "KDDCup09-Appetency", "APSFailure", "volkert", "covertype"]:
+    for d in ["Amazon_employee_access", "higgs", "KDDCup09-Appetency", "APSFailure", "volkert", "covertype"]:
         args.dataset = d
         print(args.dataset)
         try:
             main()
         except:
-            print("Error")
+            print(f"Error {args.dataset}")
+

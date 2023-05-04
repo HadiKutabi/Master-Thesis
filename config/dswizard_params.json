@@ -1,6 +1,6 @@
 {
     "n_workers": 1,
     "model": "resources/rf_complete.pkl",
-    "wallclock_limit": 1200,
-    "cutoff": 75
+    "wallclock_limit": 2700,
+    "cutoff": 120
 }
