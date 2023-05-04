@@ -1,13 +1,12 @@
-import logging
-import os
 import sys
-
-import numpy as np
-
-from utils.write_done import write_done_txt
-
 sys.path.append("../")
 sys.path.append("/../..")
+
+import numpy as np
+import logging
+import os
+
+from utils.write_done import write_done_txt
 
 from time import time
 import pandas as pd
@@ -57,15 +56,6 @@ def make_predictions(pipeline, ensemble, test_ds, save_to_dir):
     preds.to_csv(pjoin(save_to_dir, "predictions.csv"), index=False)
 
     return preds
-
-
-def compute_and_save_score(pred, test_ds, train_score, save_to_dir):
-    df_perf = pd.DataFrame()
-    df_perf["train_accuracy"] = train_score
-    print(accuracy_score(test_ds.y, pred["inc_pred"].values.ravel()))
-    df_perf["incumbent_test_score"] = accuracy_score(test_ds.y, pred["inc_pred"].values.ravel())
-    df_perf["ensemble_test_score"] = accuracy_score(test_ds.y, pred["ens_pred"].values.ravel())
-    df_perf.to_csv(pjoin(save_to_dir, "scores.csv"), index=False)
 
 
 def compute_and_save_score(pred, test_ds, train_score, save_to_dir):
@@ -130,7 +120,7 @@ def main():
 if __name__ == "__main__":
 
     P_ROOT = get_project_root()
-    parser = argparse.ArgumentParser(description='Run Auto-Sklearn1')
+    parser = argparse.ArgumentParser(description='Run TPOT')
     parser.add_argument("--automl_params_path", type=str, default= pjoin(P_ROOT, "config/dswizard_params.json"))
     parser.add_argument("--dataset", type=str)
     args = parser.parse_args()
