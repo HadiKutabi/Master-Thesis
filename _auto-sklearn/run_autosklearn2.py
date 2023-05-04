@@ -1,10 +1,8 @@
 import sys
-
-from utils.write_done import write_done_txt
-
 sys.path.append("../")
 sys.path.append("/../..")
 
+from utils.write_done import write_done_txt
 
 from time import time
 from autosklearn.experimental.askl2 import AutoSklearn2Classifier
