@@ -137,5 +137,6 @@ if __name__ == "__main__":
         try:
             main()
         except:
-            print(f"Error {args.dataset}")
+            print(f"Error {d}")
+
 
