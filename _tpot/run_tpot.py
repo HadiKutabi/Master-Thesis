@@ -135,4 +135,7 @@ if __name__ == "__main__":
         "vehicle"]:#, "higgs", "Amazon_employee_access"]:  # , "KDDCup09-Appetency", "APSFailure", "volkert", "covertype"]:
         args.dataset = d
         print(args.dataset)
-        main()
+        try:
+            main()
+        except:
+            print(f"Error {d}")

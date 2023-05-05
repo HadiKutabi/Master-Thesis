@@ -17,7 +17,7 @@ from os import getcwd
 from os.path import join as pjoin
 
 from utils.helpers import get_project_root, get_saved_or_newly_generated_seed, fetch_dataset_as_df
-from utils.io_funcs import load_json, dump_pickle
+from utils.io_funcs import load_json, dump_pickle, write_txt
 
 from dswizard.util import util
 from dswizard.core.model import Dataset
@@ -99,6 +99,9 @@ def main():
 
     print(f"DSWIZARD took {total_time}")
 
+    write_txt(str(total_time), pjoin(RUN_DIR, "total_time.txt"))
+    print("Saved total time")
+
     _, incumbent = run_history.get_incumbent()
     dump_pickle(pipeline, pjoin(RUN_DIR, "pipeline.pkl"))
     print("Pipeline saved")
@@ -132,4 +135,5 @@ if __name__ == "__main__":
         try:
             main()
         except:
-            print(f"Error {args.dataset}")
+            print(f"Error {d}")
+
