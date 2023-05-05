@@ -131,7 +131,8 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", type=str)
     args = parser.parse_args()
 
-    for d in ["Amazon_employee_access", "higgs", "KDDCup09-Appetency", "APSFailure", "volkert", "covertype"]:
+    for d in [
+        "vehicle", "higgs", "Amazon_employee_access", "KDDCup09-Appetency", "APSFailure", "volkert", "covertype"]:
         args.dataset = d
         print(args.dataset)
         try:

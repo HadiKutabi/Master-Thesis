@@ -132,7 +132,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     for d in [
-        "vehicle"]:#, "higgs", "Amazon_employee_access"]:  # , "KDDCup09-Appetency", "APSFailure", "volkert", "covertype"]:
+        "vehicle", "higgs", "Amazon_employee_access", "KDDCup09-Appetency", "APSFailure", "volkert", "covertype"]:
         args.dataset = d
         print(args.dataset)
         try:
