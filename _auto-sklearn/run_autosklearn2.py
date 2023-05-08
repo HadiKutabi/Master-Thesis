@@ -62,7 +62,12 @@ def get_and_save_stats_csv(aml, total_time, accuracy, save_to_dir):
     stats = pd.DataFrame(stats)
     stats["total_time"] = total_time
     stats["test_score"] = accuracy
-    stats["n_pipelines_in_ensemble"] = len(aml.show_models())
+
+    try:
+        stats["n_pipelines_in_ensemble"] = len(aml.show_models())
+    except Exception as e:
+        print(e)
+        stats["n_pipelines_in_ensemble"] = "not available"
     stats.to_csv(pjoin(save_to_dir, "run_stats.csv"), index=False)
 
 
