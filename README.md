@@ -7,13 +7,21 @@ To run the different libraries, the following python versions were used:
 
 | AutoML Framework | Python Version |   
 |------------------|----------------|
-| AutoSklearn      | 3.7            |
-| TPOT             | 3.7            | 
-| DSWIZARD         | 3.8            |  
-| AlphaD3M         |                |  
+| AutoSklearn      | 3.7.16         |
+| TPOT             | 3.7.16         | 
+| DSWIZARD         | 3.8.16         |  
+| AlphaD3M         | 3.7.16         |  
 
 I used a separate venv for each library. The corresponding dependencies are to be found under /config.
 
+The automl frameworks were tested on the following two systems: 
+
+| System 1                                       | System 1                         |   
+|------------------------------------------------|----------------------------------|
+| Ubuntu 20.04.6 LTS                             | Ubuntu 22.04.2 LTS               |
+| x86_64                                         | x86_64                           | 
+| 11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz | AMD EPYC 7401P 24-Core Processor | 
+| docker version  23.0.5                         | docker version 23.0.4                  | 
 ----------------------------
 ## Datasets 
 
@@ -28,7 +36,7 @@ the directory `datasets` should be then automatically created for saving each da
 ------------------------------
 ## Running AutoML Frameworks
 
-In each directory starting with `_`, run can be directly executed and the results should be saved automatically. 
+In each directory starting with `_`, run can be directly executed and the results should be saved automatically. or you can run `./run_automl_systems_.sh` to run all the systems at once. Make sure that the paths to the virtual environments are correct 
 
 note: before running DSWIZARD, make sure to run `./_dswizard/get_meta_learning_base.sh`
 
@@ -52,7 +60,7 @@ This is changed to acquire the run statistics as a dict instead of a string
 ``/home/hadi/PycharmProjects/Master-Thesis/venv/autosklearn_37/lib/python3.7/site-packages/autosklearn/automl.py``
 
 ```python
- def sprint_statistics(self) -> str:
+    def sprint_statistics(self) -> str:
         stats = {}
         check_is_fitted(self)
         cv_results = self.cv_results_
@@ -89,7 +97,7 @@ This is changed to acquire the run statistics as a dict instead of a string
             best_score = cv_results[key][idx_success][idx_best_run]
             sio.write("  Best validation score: %f\n" % best_score)
 
-        stats["best_valid_score"] = [best_score]
+            stats["best_valid_score"] = [best_score]
         num_runs = len(cv_results["status"])
         sio.write("  Number of target algorithm runs: %d\n" % num_runs)
         stats["num_runs"] = [num_runs]
