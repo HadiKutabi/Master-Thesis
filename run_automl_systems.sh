@@ -3,7 +3,7 @@ ROOT="$(cd -- "$MY_PATH" && pwd)"
 echo "NOW IN $ROOT"
 
 # tpot
-source "venv/38_tpot/bin/activate"
+source "/home/hk/python_venvs/37_tpot/bin/activate"
 echo "Activated TPOT's venv"
 cd "_tpot"
 echo "NOW IN" $(pwd)
@@ -16,7 +16,8 @@ echo "NOW IN" $(pwd)
 
 
 # dswizard
-source "venv/38_dswizard/bin/activate"
+
+source "/home/hk/python_venvs/dswizard38/bin/activate"
 echo "Activated DSWIZARD's venv"
 cd "_dswizard"
 echo "NOW IN" $(pwd)
@@ -30,7 +31,7 @@ echo "NOW IN" $(pwd)
 
 
 # Alphad3m
-source "venv/37_alphad3m/bin/activate"
+source "/home/hk/python_venvs/37_alphad3m/bin/activate"
 echo "Activated AlphaD3M's venv"
 cd "_alphad3m"
 echo "NOW IN" $(pwd)
@@ -42,7 +43,7 @@ echo "NOW IN" $(pwd)
 
 
 # Autosklearn
-source "venv/autosklearn_37/bin/activate"
+source "/home/hk/python_venvs/autosklearn37/bin/activate"
 echo "Activated Autosklearn's venv"
 cd "_auto-sklearn"
 echo "NOW IN" $(pwd)
