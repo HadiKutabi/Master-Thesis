@@ -136,11 +136,9 @@ if __name__ == "__main__":
     for d in os.listdir(pjoin(P_ROOT, "datasets")):
 
         args.dataset = d
-
-        args.dataset = "vehicle"
         print(args.dataset)
         try:
             main()
         except Exception as e:
-            print(f"Error {args.dataset }")
+            print(f"Error {args.dataset}")
             print(e)

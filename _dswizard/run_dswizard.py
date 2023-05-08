@@ -131,7 +131,6 @@ if __name__ == "__main__":
 
         args.dataset = d
 
-        args.dataset = "vehicle"
         print(args.dataset)
         try:
             main()
