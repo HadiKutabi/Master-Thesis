@@ -1,6 +1,6 @@
 {
-    "time_bound": 5,
-    "time_bound_run": 2,
+    "time_bound": 240,
+    "time_bound_run": 12,
     "target": "target",
     "metric": "accuracy"
 }

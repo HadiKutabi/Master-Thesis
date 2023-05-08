@@ -93,7 +93,7 @@ def score_and_save_performance(preds, lb, test_ds_path, save_to_dir):
 
     perf_df = pd.DataFrame()
 
-    perf_df["id"] = lb[lb["ranking"] == 1]["id"].values[0]
+    perf_df["id"] = [lb[lb["ranking"] == 1]["id"].values[0]]
     perf_df["train_acc"] = [train_acc]
     perf_df["test_acc"] = [test_acc]
 
@@ -174,12 +174,10 @@ if __name__ == "__main__":
 
     for d in os.listdir(pjoin(P_ROOT, "datasets")):
 
-        if "vehicle" in d:
-
-            args.dataset = "vehicle"
-            print(args.dataset)
-            try:
-                main()
-            except Exception as e:
-                print(f"Error {args.dataset}")
-                print(e)
+        args.dataset = d
+        print(args.dataset)
+        try:
+            main()
+        except Exception as e:
+            print(f"Error {args.dataset}")
+            print(e)
