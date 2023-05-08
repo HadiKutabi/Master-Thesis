@@ -14,10 +14,10 @@ import sklearn.metrics
 
 from utils.write_done import write_done_txt
 from utils.helpers import fetch_dataset_as_df, get_project_root, get_saved_or_newly_generated_seed
+from utils.handle_run_dirs import make_run_dirs
 from tpot import TPOTClassifier
 
 from os.path import join as pjoin
-from os import getcwd
 
 from utils.io_funcs import load_json
 import argparse
@@ -69,9 +69,9 @@ def predict_and_save(aml, x_test, save_to_dir):
 
 def score_and_save_perf(aml, pred_df, y_test, opt_time, save_to_dir):
     scores_df = pd.DataFrame()
-    scores_df["training_score"] = aml._optimized_pipeline.fitness.values[-1]
-    scores_df["testing_Score"] = sklearn.metrics.accuracy_score(y_test, pred_df["pred"].values.ravel())
-    scores_df["opt_time"] = opt_time
+    scores_df["training_score"] =  [aml._optimized_pipeline.fitness.values[-1]]
+    scores_df["testing_Score"] = [sklearn.metrics.accuracy_score(y_test, pred_df["pred"].values.ravel())]
+    scores_df["opt_time"] = [opt_time]
 
     scores_df.to_csv(pjoin(save_to_dir, "stats.csv"), index=False)
 
@@ -81,13 +81,15 @@ def main():
 
     P_ROOT = get_project_root()
     DS = pjoin(P_ROOT, pjoin("datasets", args.dataset))
-    CWD = getcwd()
     SEED = get_saved_or_newly_generated_seed()
-    RUN_DIR = pjoin(CWD, f"tpot-ds_{args.dataset}-seed_{SEED}")
+    RUN_DIR = f"tpot-ds_{args.dataset}-seed_{SEED}"
     POPS = pjoin(RUN_DIR, "pops")
 
-    handle_run_dir(RUN_DIR)
-    handle_run_dir(POPS)
+    make_run_dirs(RUN_DIR)
+    make_run_dirs(pjoin(POPS))
+
+    RUN_DIR = pjoin(pjoin(P_ROOT, "automl_outputs"), RUN_DIR)
+
 
     automl_params["periodic_checkpoint_folder"] = RUN_DIR
     automl_params["log_file"] = pjoin(RUN_DIR, "log.txt")
@@ -103,8 +105,8 @@ def main():
                             population_size=automl_params["population_size"],
                             max_time_mins=automl_params["max_time_mins"],
                             max_eval_time_mins=automl_params["max_eval_time_mins"],
-                            memory=automl_params["memory"]
-
+                            memory=automl_params["memory"],
+                            n_jobs=automl_params["n_jobs"]
                             )
 
     tick = time()
@@ -131,11 +133,14 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", type=str)
     args = parser.parse_args()
 
-    for d in [
-        "vehicle", "higgs", "Amazon_employee_access", "KDDCup09-Appetency", "APSFailure", "volkert", "covertype"]:
-        args.dataset = d
-        print(args.dataset)
-        try:
-            main()
-        except:
-            print(f"Error {d}")
+    for d in os.listdir(pjoin(P_ROOT, "datasets")):
+
+        if "vehicle" in d:
+
+            args.dataset = "vehicle"
+            print(args.dataset)
+            try:
+                main()
+            except Exception as e:
+                print(f"Error {args.dataset }")
+                print(e)

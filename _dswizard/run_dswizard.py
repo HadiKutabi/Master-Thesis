@@ -53,7 +53,7 @@ def make_predictions(pipeline, ensemble, test_ds, save_to_dir):
     for i in range(0, ensemble_pred_proba.shape[1]):
         preds[f"ens_pred_proba_{i}"] = ensemble_pred_proba[:, i]
 
-    preds.to_csv(pjoin(save_to_dir, "predictions.csv"), index=False)
+    preds.to_csv(pjoin(save_to_dir, "prediction.csv"), index=False)
 
     return preds
 
@@ -73,9 +73,8 @@ def main():
 
     P_ROOT = get_project_root()
     DS = pjoin(P_ROOT, pjoin("datasets", args.dataset))
-    CWD = getcwd()
     SEED = get_saved_or_newly_generated_seed()
-    RUN_DIR = pjoin(CWD, f"dswizard-ds_{args.dataset}-seed_{SEED}")
+    RUN_DIR = pjoin(pjoin(P_ROOT, "automl_outputs"), f"dswizard-ds_{args.dataset}-seed_{SEED}")
 
     util.setup_logging(os.path.join(RUN_DIR, 'log.txt'))
     logger = logging.getLogger()
@@ -128,13 +127,14 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", type=str)
     args = parser.parse_args()
 
-    for d in [
-        "vehicle", "higgs", "Amazon_employee_access", "KDDCup09-Appetency", "APSFailure", "volkert", "covertype"]:
-        args.dataset = d
-        print(args.dataset)
+    for d in os.listdir(pjoin(P_ROOT, "datasets")):
 
-        try:
-            main()
-        except:
-            print(f"Error {d}")
+        if "vehicle" in d:
 
+            args.dataset = "vehicle"
+            print(args.dataset)
+            try:
+                main()
+            except Exception as e:
+                print(f"Error {args.dataset}")
+                print(e)

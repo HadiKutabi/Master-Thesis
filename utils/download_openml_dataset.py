@@ -24,9 +24,8 @@ datasets_ids = [
     # binary classification
     4532,  # higgs
     4135,  # amazon_employee_access
+    54,  # vehicle
     42757,  # KDDCup09-Appetency
-    41138,  # APSFailure
-    54, # vehicle
     # multi class
     41166,  # volkert
     1596  # covertype
@@ -100,11 +99,10 @@ if __name__ == "__main__":
             print("dataset dir created")
 
         if "Unnamed: 0" in list(train.columns):
-            train = train.drop("Unnamed: 0", axis = 1)
+            train = train.drop("Unnamed: 0", axis=1)
 
         train = drop_unnamed_col(train)
         test = drop_unnamed_col(test)
-
 
         train.to_csv(pjoin(dataset_dir, "train.csv"), index=False)
         test.to_csv(pjoin(dataset_dir, "test.csv"), index=False)

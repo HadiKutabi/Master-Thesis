@@ -3,6 +3,7 @@ sys.path.append("../")
 sys.path.append("/../..")
 
 from utils.write_done import write_done_txt
+from handle_run_dir import del_run_dir_if_exists
 
 from time import time
 from autosklearn.experimental.askl2 import AutoSklearn2Classifier
@@ -10,7 +11,7 @@ import pandas as pd
 from sklearn.metrics import accuracy_score
 
 import argparse
-from os import getcwd
+import os
 from os.path import join as pjoin
 
 from utils.helpers import get_project_root, get_saved_or_newly_generated_seed, fetch_dataset_as_df
@@ -80,15 +81,19 @@ def predict_and_save(aml, x_test, save_to_dir):
     return pred, pred_proba
 
 
+
+
+
 def main():
     automl_params = load_json(args.automl_params_path)
     logging_config = get_logging_config()
 
     P_ROOT = get_project_root()
     DS = pjoin(P_ROOT, pjoin("datasets", args.dataset))
-    CWD = getcwd()
     SEED = get_saved_or_newly_generated_seed()
-    RUN_DIR = pjoin(CWD, f"autosklearn2-ds_{args.dataset}-seed_{SEED}")
+    RUN_DIR = pjoin(pjoin(P_ROOT, "automl_outputs"), f"autosklearn2-ds_{args.dataset}-seed_{SEED}")
+    del_run_dir_if_exists(RUN_DIR)
+
 
     X_train, X_test, y_train, y_test = fetch_and_split_data_set(DS)
 
@@ -131,13 +136,14 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", type=str)
     args = parser.parse_args()
 
-    for d in [
-        "vehicle", "higgs", "Amazon_employee_access", "KDDCup09-Appetency", "APSFailure", "volkert", "covertype"]:
+    for d in os.listdir(pjoin(P_ROOT, "datasets")):
 
-        args.dataset = d
-        print(args.dataset)
+        if "vehicle" in d:
 
-        try:
-            main()
-        except:
-            print(f"Error {d}")
+            args.dataset = "vehicle"
+            print(args.dataset)
+            try:
+                main()
+            except Exception as e:
+                print(f"Error {args.dataset}")
+                print(e)

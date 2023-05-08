@@ -1,6 +1,6 @@
 {
-    "time_left_for_this_task": 1200,
-    "per_run_time_limit": 360,
+    "time_left_for_this_task": 300,
+    "per_run_time_limit": 60    ,
     "ensemble_kwargs": {
         "ensemble_size": 50
     },

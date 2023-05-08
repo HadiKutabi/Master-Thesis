@@ -5,6 +5,8 @@ sys.path.append("/../..")
 
 from alphad3m_containers import DockerAutoML
 
+# from alphad3m import AutoML
+
 from sklearn.metrics import accuracy_score
 import pandas as pd
 from utils.write_done import write_done_txt
@@ -16,6 +18,7 @@ import argparse
 from os.path import join as pjoin
 from os import getcwd
 from time import time
+import os
 
 
 def get_classification_keywords(ds, target="target"):
@@ -77,18 +80,19 @@ def predict_pipeline(automl, pipeline_id, test_ds_path, save_to_dir):
 
     joined = preds.set_index('d3mIndex').join(pivoted_pred_proba)
 
-    joined.to_csv(pjoin(save_to_dir, "predictions.csv"), index=False)
+    joined.to_csv(pjoin(save_to_dir, "prediction.csv"), index=False)
 
     return joined
 
 
-def score_and_save_perforamnce(preds, lb, test_ds_path, save_to_dir):
+def score_and_save_performance(preds, lb, test_ds_path, save_to_dir):
     test_ds = pd.read_csv(test_ds_path)
 
     train_acc = lb[lb["ranking"] == 1]["accuracy"].values[0]
     test_acc = accuracy_score(test_ds["target"].values.ravel(), preds["target"].values.ravel())
 
     perf_df = pd.DataFrame()
+
     perf_df["id"] = lb[lb["ranking"] == 1]["id"].values[0]
     perf_df["train_acc"] = [train_acc]
     perf_df["test_acc"] = [test_acc]
@@ -105,9 +109,10 @@ def main():
     DS = pjoin(P_ROOT, pjoin("datasets", args.dataset))
     TRAIN = pjoin(DS, "train.csv")
     TEST = pjoin(DS, "test.csv")
-    CWD = getcwd()
     SEED = get_saved_or_newly_generated_seed()
-    RUN_DIR = pjoin(CWD, f"alphad3m-ds_{args.dataset}-seed_{SEED}")
+    # RUN_DIR = pjoin(CWD, f"alphad3m-ds_{args.dataset}-seed_{SEED}")
+
+    RUN_DIR = pjoin(pjoin(P_ROOT, "automl_outputs"), f"alphad3m-ds_{args.dataset}-seed_{SEED}")
 
     automl_params["random_seed"] = SEED
 
@@ -146,14 +151,17 @@ def main():
     preds = predict_pipeline(automl, incumbent, TEST, RUN_DIR)
     print("Saved predictions")
 
-    performance = score_and_save_perforamnce(preds, lb, TEST, RUN_DIR)
+    performance = score_and_save_performance(preds, lb, TEST, RUN_DIR)
     print("Saved scores")
 
     write_done_txt(RUN_DIR)
+    automl.end_session()
     print("DONE")
     print("===================================================================== \n\n\n")
 
     # automl.export_pipeline_code()
+
+
 
 
 if __name__ == "__main__":
@@ -164,12 +172,14 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", type=str)
     args = parser.parse_args()
 
+    for d in os.listdir(pjoin(P_ROOT, "datasets")):
 
-    for d in [
-        "vehicle", "higgs", "Amazon_employee_access", "KDDCup09-Appetency", "APSFailure", "volkert", "covertype"]:
-        args.dataset = d
-        print(args.dataset)
-        try:
-            main()
-        except:
-            print(f"Error {d}")
+        if "vehicle" in d:
+
+            args.dataset = "vehicle"
+            print(args.dataset)
+            try:
+                main()
+            except Exception as e:
+                print(f"Error {args.dataset}")
+                print(e)
