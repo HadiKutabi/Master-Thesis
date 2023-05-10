@@ -22,39 +22,46 @@ DATASETS_DIR = pjoin(ROOT_DIR, "datasets")
 
 datasets_ids = [
     # binary classification
-    4532,  # higgs
-    4135,  # amazon_employee_access
-    54,  # vehicle
-    42757,  # KDDCup09-Appetency
+
+    # 9911, #amazon_employee_access
+    219,  # electricity
+    168868, #APSFailure, # with missing
+    3917, #kc1
+
+
     # multi class
-    41166,  # volkert
-    1596  # covertype
+    9986,  # gas-drift
+    45, #splice
+    168331,  #volkert
 
 ]
 
 
 def fetch_dataset(d_id):
-    dataset = openml.datasets.get_dataset(d_id)
-    target_name = dataset.default_target_attribute
-    data, _, _, _ = dataset.get_data()
+    task = openml.tasks.get_task(d_id)
+    X, y = task.get_X_and_y(dataset_format='dataframe')
+    d_name = task.get_dataset().name
 
-    return data, dataset, target_name
+    return openml.tasks.get_task(d_id), X, y, d_name
 
 
-def encode_labels(df, target):
+
+def encode_labels(y):
     le = LabelEncoder()
-    classes = list(df[target].unique())
+    classes = list(y.unique())
     le.fit(classes)
-    encoded = le.transform(df[target].tolist())
-    df.loc[:, "target"] = encoded
-    if target != "target":
-        df.drop(target, axis=1, inplace=True)
-
-    return df
+    return le.transform(y)
 
 
-def split_train_test(df, test_size=0.25, seed=SEED):
-    train, test = train_test_split(df, test_size=test_size, random_state=seed)
+def split_train_test(X, y, task, target_name="target"):
+    train_indices, test_indices = task.get_train_test_split_indices(fold=1)
+
+    data = X
+    data[target_name] = y
+
+    train = data.loc[train_indices]
+    test = data.loc[test_indices]
+
     return train, test
 
 
@@ -81,18 +88,20 @@ if __name__ == "__main__":
     for d in datasets_ids:
         print("fetching dataset id", d)
         tick = time.time()
-        data, dataset, target_name = fetch_dataset(d)
+        task, X, y, name = fetch_dataset(d)
         tock = time.time()
-        mins = int((tock - tick) / 60)
-        print(f"fetched dataset {dataset.name} in {mins} minutes")
-        print("shape:", data.shape)
-        data = encode_labels(data, target_name)
+        download_mins = (tock - tick) / 60
+
+        print(f"fetched dataset {name} in {int(download_mins)} minutes")
+        print("X shape:", X.shape)
+        print("y shape:", y.shape)
+        y = encode_labels(y)
         print("encoded")
-        train, test = split_train_test(data, 0.25)
+        train, test = split_train_test(X, y, task)
         print("split")
         metadata = get_dataset_metadata(d)
         print("metadata acquired")
-        dataset_dir = pjoin(DATASETS_DIR, dataset.name)
+        dataset_dir = pjoin(DATASETS_DIR, name)
 
         if os.path.exists(dataset_dir) is False:
             os.mkdir(dataset_dir)
