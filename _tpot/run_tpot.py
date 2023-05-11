@@ -127,6 +127,8 @@ def main():
 
 if __name__ == "__main__":
 
+    print("hererewrere")
+
     P_ROOT = get_project_root()
     parser = argparse.ArgumentParser(description='Run TPOT')
     parser.add_argument("--automl_params_path", type=str, default=pjoin(P_ROOT, "config/tpot_params.json"))

@@ -91,33 +91,33 @@ if __name__ == "__main__":
         tick = time.time()
         task, X, y, name = fetch_task(d)
         print(task.dataset_id)
-        # tock = time.time()
-        # download_mins = (tock - tick) / 60
-        #
-        # print(f"fetched dataset {name} in {int(download_mins)} minutes")
-        # print("X shape:", X.shape)
-        # print("y shape:", y.shape)
-        # y = encode_labels(y)
-        # print("encoded")
-        # train, test = split_train_test(X, y, task)
-        # print("split")
-        # metadata = get_dataset_metadata(task)
-        # print("metadata acquired")
-        # dataset_dir = pjoin(DATASETS_DIR, name)
-        #
-        # if os.path.exists(dataset_dir) is False:
-        #     os.mkdir(dataset_dir)
-        #     print("dataset dir created")
-        #
-        # if "Unnamed: 0" in list(train.columns):
-        #     train = train.drop("Unnamed: 0", axis=1)
-        #
-        # train = drop_unnamed_col(train)
-        # test = drop_unnamed_col(test)
-        #
-        # train.to_csv(pjoin(dataset_dir, "train.csv"), index=False)
-        # test.to_csv(pjoin(dataset_dir, "test.csv"), index=False)
-        # metadata.to_csv(pjoin(dataset_dir, "metadata.csv"), index=False)
-        # print("saved!")
-        # print("=================")
-        # print("\n\n")
+        tock = time.time()
+        download_mins = (tock - tick) / 60
+
+        print(f"fetched dataset {name} in {int(download_mins)} minutes")
+        print("X shape:", X.shape)
+        print("y shape:", y.shape)
+        y = encode_labels(y)
+        print("encoded")
+        train, test = split_train_test(X, y, task)
+        print("split")
+        metadata = get_dataset_metadata(task)
+        print("metadata acquired")
+        dataset_dir = pjoin(DATASETS_DIR, name)
+
+        if os.path.exists(dataset_dir) is False:
+            os.mkdir(dataset_dir)
+            print("dataset dir created")
+
+        if "Unnamed: 0" in list(train.columns):
+            train = train.drop("Unnamed: 0", axis=1)
+
+        train = drop_unnamed_col(train)
+        test = drop_unnamed_col(test)
+
+        train.to_csv(pjoin(dataset_dir, "train.csv"), index=False)
+        test.to_csv(pjoin(dataset_dir, "test.csv"), index=False)
+        metadata.to_csv(pjoin(dataset_dir, "metadata.csv"), index=False)
+        print("saved!")
+        print("=================")
+        print("\n\n")
